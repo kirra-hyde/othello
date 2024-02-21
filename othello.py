@@ -6,100 +6,25 @@ def legal_move(game_board: list[list[int]], player: int, coordinates: tuple[int,
     height = len(game_board)
     legal_coordinates(coordinates, width, height)
 
-    x = coordinates[0]
-    y = coordinates[1]
+    x, y = coordinates
+
     if game_board[y][x] != 0:
         return False
 
     opponent = 2 if (player == 1) else 1
 
-    curr_y = y - 1
-
-    if curr_y >= 0 and game_board[curr_y][x] == opponent:
-        while curr_y >= 0:
-            if game_board[curr_y][x] == player:
-                return True
-            if game_board[curr_y][x] == 0:
-                break
-            curr_y -= 1
-
-    curr_y = y - 1
-    curr_x = x + 1
-
-    if curr_y >= 0 and curr_x < width and game_board[curr_y][curr_x] == opponent:
-        while curr_y >= 0 and curr_x < width:
-            if game_board[curr_y][curr_x] == player:
-                return True
-            if game_board[curr_y][curr_x] == 0:
-                break
-            curr_y -= 1
-            curr_x += 1
-
-    curr_x = x + 1
-
-    if curr_x < width and game_board[y][curr_x] == opponent:
-        while curr_x < width:
-            if game_board[y][curr_x] == player:
-                return True
-            if game_board[y][curr_x] == 0:
-                break
-            curr_x += 1
-
-    curr_y = y + 1
-    curr_x = x + 1
-
-    if curr_y < height and curr_x < width and game_board[curr_y][curr_x] == opponent:
-        while curr_y < height and curr_x < width:
-            if game_board[curr_y][curr_x] == player:
-                return True
-            if game_board[curr_y][curr_x] == 0:
-                break
-            curr_y += 1
-            curr_x += 1
-
-    curr_y = y + 1
-
-    if curr_y < height and game_board[curr_y][x] == opponent:
-        while curr_y < height:
-            if game_board[curr_y][x] == player:
-                return True
-            if game_board[curr_y][x] == 0:
-                break
-            curr_y += 1
-
-    curr_y = y + 1
-    curr_x = x - 1
-
-    if curr_y < height and curr_x >= 0 and game_board[curr_y][curr_x] == opponent:
-        while curr_y < height and curr_x >= 0:
-            if game_board[curr_y][curr_x] == player:
-                return True
-            if game_board[curr_y][curr_x] == 0:
-                break
-            curr_y += 1
-            curr_x -= 1
-
-    curr_x = x - 1
-
-    if curr_x >= 0 and game_board[y][curr_x] == opponent:
-        while curr_x >= 0:
-            if game_board[y][curr_x] == player:
-                return True
-            if game_board[y][curr_x] == 0:
-                break
-            curr_x -= 1
-
-    curr_x = x - 1
-    curr_y = y - 1
-
-    if curr_y >= 0 and curr_x >= 0 and game_board[curr_y][curr_x] == opponent:
-        while curr_y >= 0 and curr_x >= 0:
-            if game_board[curr_y][curr_x] == player:
-                return True
-            if game_board[curr_y][curr_x] == 0:
-                break
-            curr_y -= 1
-            curr_x -= 1
+    for dx, dy in [(0, -1), (1, -1), (1, 0), (1, 1), (0, 1), (-1, 1), (-1, 0), (-1, -1)]:
+        curr_x, curr_y = x + dx, y + dy
+        if 0 <= curr_x < len(game_board[0]) and 0 <= curr_y < len(game_board):
+            if game_board[curr_y][curr_x] == opponent:
+                # Check if a flanking piece exists in this direction
+                while 0 <= curr_x < len(game_board[0]) and 0 <= curr_y < len(game_board):
+                    if game_board[curr_y][curr_x] == player:
+                        return True
+                    if game_board[curr_y][curr_x] == 0:  # Empty cell
+                        break
+                    curr_x += dx
+                    curr_y += dy
 
     return False
 
